@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
@@ -20,10 +21,15 @@ public class Contact implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
     private String sname;
+    @NotNull
     private String email;
+    @NotNull
     private String phone;
+    @NotNull
     private String adresse;
 
     public Contact(String name, String sname, String email, String phone, String adresse, Category category) {
@@ -35,18 +41,7 @@ public class Contact implements Serializable {
         this.category = category;
     }
 
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", sname='" + sname + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", adresse='" + adresse + '\'' +
-                ", category=" + category +
-                '}';
-    }
+
 
     @ManyToOne
     private Category category;
