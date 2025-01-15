@@ -14,45 +14,53 @@
   <div class="col-md-4 col-xs-8">
     <div class="panel panel-primary">
       <div class="panel-heading">Modifier un Contact</div>
-      <div class="panel-body container">
+      <div class="panel-body">
         <form th:action="@{/save}" method="post" >
           <div class="form-group">
-            <label  class="form-label">Id</label>
-            <input  readonly type="text" class="form-control" name="id" th:value="${contact.id}">
+            <label  class="form-label">Id: </label>
+            <input readonly type="number" class="form-control" name="id" th:value="${contact.id}">
+            <span th:errors="${contact.id}"></span>
           </div>
           <div class="form-group">
             <label  class="form-label">Nom: </label>
             <input type="text" class="form-control" name="name" th:value="${contact.name}">
-            <span  th:errors="${contact.name}" class="text-danger"></span>
+            <span th:errors="${contact.name}"></span>
           </div>
           <div class="form-group">
             <label  class="form-label">Prenom: </label>
             <input type="text" class="form-control" name="sname" th:value="${contact.sname}">
-            <span th:errors="${contact.sname}" class="text-danger"></span>
+            <span th:errors="${contact.sname}"></span>
           </div>
           <div class="form-group">
             <label  class="form-label">Email: </label>
-            <input type="text" name="email"  class="form-control" th:value="${contact.email}">
-            <span th:errors="${contact.email}" class="text-danger"></span>
+            <input type="text" class="form-control" name="email" th:value="${contact.email}">
+            <span th:errors="${contact.email}"></span>
           </div>
           <div class="form-group">
-            <label  class="form-label">Adresse: </label>
-            <input type="text" name="adresse"  class="form-control" th:value="${contact.adresse}">
-            <span th:errors="${contact.adresse}" class="text-danger"></span>
+            <label  class="form-label">adresse</label>
+            <input type="text" class="form-control" name="adresse" th:value="${contact.adresse}">
+            <span th:errors="${contact.adresse}"></span>
+          </div>
+          <div class="form-group">
+            <label  class="form-label">Phone: </label>
+            <input type="text" class="form-control" name="phone" th:value="${contact.phone}">
+            <span th:errors="${contact.phone}"></span>
           </div>
           <div class="form-group">
             <label  class="form-label">Category</label>
-            <select name="category" class="form-control">
-              <option class="form-control"  th:each="category : ${categories}"  th:value="${category.id}" th:text="${category.name}"></option>
-            </select>
+            <label>
+              <select name="category">
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+              </select>
+            </label>
+<!--            <span th:errors="${category.id}"></span>-->
           </div>
           <button type="submit" class="btn btn-primary">Update Contact</button>
         </form>
       </div>
     </div>
   </div>
-</div>
-</body>
 
+</div>
 </body>
 </html>

@@ -1,10 +1,7 @@
 package fr.fms.entities;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,6 +9,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
 
+@Getter
 @Entity
 @Data
 @AllArgsConstructor
@@ -35,24 +33,13 @@ public class Category implements Serializable {
         this.name = name;
     }
 
-    public long getId() {
-        return id;
-    }
 
     public void setId(long id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Contact> getContacts() {
-        return contacts;
     }
 
     public void setContacts(List<Contact> contacts) {

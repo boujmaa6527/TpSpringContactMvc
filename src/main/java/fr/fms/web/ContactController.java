@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -71,43 +72,60 @@ public class ContactController {
             return "contacts";
         }
         @GetMapping("/delete")
-        public String delete(Long id, int page, String kw){
-            Optional<Contact> contactDell = contactRepository.findById(id);
-            if(contactDell.isPresent()){
-                contactRepository.deleteById(contactDell.get().getId());
+        public String delete(Long id, RedirectAttributes redirectAttributes){
+//            Optional<Contact> contactDell = contactRepository.findById(id);
+//            if(contactDell.isPresent()){
+//                contactRepository.deleteById(contactDell.get().getId());
+//            }
+            try {
+                businessImpl.deleteContact(id);
+            } catch (Exception e){
+                redirectAttributes.addAttribute("error", e.getMessage());
             }
-            return "redirect:/index?catId=1";
+            return "redirect:/index";
         }
         @GetMapping("/contact")
-        public String contact(Model model){
+        public String contact(Model model) throws Exception {
             model.addAttribute("contact", new Contact());
-            model.addAttribute("categories", categoryRepository.findAll());
+            model.addAttribute("categories", businessImpl.getCategories());
 
             return "contact";
         }
         @PostMapping("/save")
-        public String save(@Valid Contact contact, BindingResult bindingResult){
+        public String save(@Valid Contact contact, BindingResult bindingResult) throws Exception {
             if(bindingResult.hasErrors()){
                 return "update";
             }
-            contactRepository.save(contact);
+            if(contact.getId() != null && contactRepository.existsById(contact.getId())){
+                if( contact.getCategory() != null){
+                    categoryRepository.save(contact.getCategory());
+                }
+                contactRepository.save(contact);
+            }else {
+                contactRepository.save(contact);
+            }
+
             return "redirect:/index";
         }
         @GetMapping("/update/{id}")
-        public String update(@PathVariable(value = "id") Long id, Model model){
-
+        public String update(@PathVariable(value = "id") Long id, Model model)  {
+            System.out.println("update");
             Optional<Contact> contactUpdate = contactRepository.findById(id);
             if(contactUpdate.isPresent()){
                 Contact contact = contactUpdate.get();
+                //Optional<Category> categorie =  categoryRepository.findById(id);
                 model.addAttribute("contact", contact);
-                model.addAttribute("categories", categoryRepository.findAll());
-                contactRepository.save(contact);
+                model.addAttribute("categories",categoryRepository.findAll());
+//              System.out.println("Contact update" + contact);
+                //contactRepository.save(contact);
                 return "update";
-            }else{
+            }else {
                 System.out.println(("Not found Article " +id));
                 return "Error";
             }
+
         }
+
         @GetMapping("/")
         public String home(){
             return "redirect:/index";
