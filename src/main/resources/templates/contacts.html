@@ -2,6 +2,7 @@
 <html xmlns:th= "http://thymeleaf.org"
       xmlns:layout = "http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate = "layout"
+      xmlns:sec = "http://www.thymeleaf.org/extras/spring-security5>"
       lang="fr"
 >
 <head>
@@ -45,18 +46,18 @@
             <td th:text="${c.adresse}"></td>
             <td th:text="${c.phone}"></td>
 
-            <td>
+            <td sec:authorize="hasRole('ROLE_ADMIN')">
               <a class="btn btn-success" th:href="@{'/update/'+${c.id}}">Update</a>
             </td>
-            <td>
+            <td sec:authorize="hasRole('ROLE_ADMIN')">
               <a class="btn btn-danger" th:href="@{/delete(id=${c.id},page=${currentPage}, keyword=${keyword})}">Delete</a>
             </td>
           </tr>
         </table>
       </div>
       <ul class="nav nav-pills pagination">
-        <li th:class="${currentPage==status.index}? 'active': ''"  th:each="page,status:${pages}">
-          <a class="btn btn-primary" th:href="@{/index(page=${status.index},keyword=${keyword})}" th:text="${status.index}"></a>
+        <li th:class="${currentPage==status.index}?'active': ''"  th:each="page,status:${pages}">
+          <a class="btn btn-primary" th:href="@{/index(page=${status.index},keyword=${keyword}, catId=${catId})}" th:text="${status.index}"></a>
         </li>
       </ul>
 

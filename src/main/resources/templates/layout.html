@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th ="http://www.thymeleaf.org"
-      xmlns:layout ="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
       lang="fr">
 <head>
     <meta charset="utf-8">
@@ -17,9 +17,12 @@
                 <li class="nav-item">
                     <a class="nav-link active"  th:href="@{/index}">Accueil</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
                     <a class="nav-link" th:href="@{/contact}">Add New Contact</a>
                 </li>
+            </ul>
+            <ul class="nav navbar-nav pull-right">
+                <li><a class="btn btn-default" th:href="@{/logout}">LogOut</a> </li>
             </ul>
         </div>
     </div>

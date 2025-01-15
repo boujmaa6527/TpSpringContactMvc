@@ -108,6 +108,10 @@ public class ContactController {
                 return "Error";
             }
         }
+        @GetMapping("/")
+        public String home(){
+            return "redirect:/index";
+        }
 
 
 }
