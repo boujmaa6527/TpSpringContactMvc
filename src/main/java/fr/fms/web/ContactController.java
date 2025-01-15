@@ -6,6 +6,8 @@ import fr.fms.dao.CategoryRepository;
 import fr.fms.dao.ContactRepository;
 import fr.fms.entities.Category;
 import fr.fms.entities.Contact;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,8 +30,9 @@ public class ContactController {
     ContactRepository contactRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    private final Logger logger = LoggerFactory.getLogger(ContactController.class);
 
-        @GetMapping("/index")
+    @GetMapping("/index")
         public String index(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
                                          @RequestParam(name = "keyword", defaultValue = "") String kw,
                                          @RequestParam(name = "catId", defaultValue = "0")Long catId,
@@ -73,10 +76,6 @@ public class ContactController {
         }
         @GetMapping("/delete")
         public String delete(Long id, RedirectAttributes redirectAttributes){
-//            Optional<Contact> contactDell = contactRepository.findById(id);
-//            if(contactDell.isPresent()){
-//                contactRepository.deleteById(contactDell.get().getId());
-//            }
             try {
                 businessImpl.deleteContact(id);
             } catch (Exception e){
@@ -87,43 +86,42 @@ public class ContactController {
         @GetMapping("/contact")
         public String contact(Model model) throws Exception {
             model.addAttribute("contact", new Contact());
-            model.addAttribute("categories", businessImpl.getCategories());
+            try {
+                model.addAttribute("categories", businessImpl.getCategories());
 
+            }catch (Exception e){
+                model.addAttribute("error", e.getMessage());
+                logger.error("[CONTACT CONTROLLER : MANAGE NEW CONTACT] : {}", e.getMessage());
+            }
             return "contact";
         }
         @PostMapping("/save")
-        public String save(@Valid Contact contact, BindingResult bindingResult) throws Exception {
-            if(bindingResult.hasErrors()){
-                return "update";
-            }
-            if(contact.getId() != null && contactRepository.existsById(contact.getId())){
-                if( contact.getCategory() != null){
-                    categoryRepository.save(contact.getCategory());
-                }
-                contactRepository.save(contact);
-            }else {
-                contactRepository.save(contact);
-            }
-
+        public String save(@Valid Contact contact, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) throws Exception {
+           try {
+               if(bindingResult.hasErrors()){
+                   model.addAttribute("categories", businessImpl.getCategories());
+                   return "contact";
+               }
+               businessImpl.saveContact(contact);
+           } catch (Exception e) {
+               redirectAttributes.addAttribute("error", e.getMessage());
+               logger.error("[CONTACT CONTROLLER : SAVE CONTACT] : {}", e.getMessage());
+           }
             return "redirect:/index";
         }
         @GetMapping("/update/{id}")
-        public String update(@PathVariable(value = "id") Long id, Model model)  {
-            System.out.println("update");
-            Optional<Contact> contactUpdate = contactRepository.findById(id);
-            if(contactUpdate.isPresent()){
-                Contact contact = contactUpdate.get();
-                //Optional<Category> categorie =  categoryRepository.findById(id);
+        public String update(@PathVariable(value = "id") Long id, Model model) throws Exception {
+            Contact contact;
+            try {
+                contact = businessImpl.getContactById(id);
                 model.addAttribute("contact", contact);
-                model.addAttribute("categories",categoryRepository.findAll());
-//              System.out.println("Contact update" + contact);
-                //contactRepository.save(contact);
-                return "update";
-            }else {
-                System.out.println(("Not found Article " +id));
-                return "Error";
-            }
+                model.addAttribute("categories",businessImpl.getCategories());
 
+            } catch (Exception e) {
+                model.addAttribute("error", e.getMessage());
+                logger.error("[CONTACT CONTROLLER : EDIT] : {}", e.getMessage());
+            }
+            return "update";
         }
 
         @GetMapping("/")

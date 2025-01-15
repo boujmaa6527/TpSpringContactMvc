@@ -27,27 +27,4 @@ public class Category implements Serializable {
     @OneToMany(mappedBy = "category")
     private List<Contact> contacts;
 
-
-
-    public Category(String name) {
-        this.name = name;
-    }
-
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setContacts(List<Contact> contacts) {
-        this.contacts = contacts;
-    }
-
-    public Category(String name, long id) {
-        this.name = name;
-        this.id = id;
-    }
 }

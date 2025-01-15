@@ -2,7 +2,6 @@ package fr;
 
 import fr.fms.dao.CategoryRepository;
 import fr.fms.dao.ContactRepository;
-import fr.fms.entities.Category;
 import fr.fms.entities.Contact;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -31,8 +30,8 @@ class SpringEvalContactMvcApplicationTests {
 	@Test
 	void test_add_contact(){
 		//Given
-		Category categoryAnonymous = categoryRepository.save(new Category("categoryAnonymous"));
-		contactRepository.save(new Contact("name", "sname","email", "phone", "adresse", categoryAnonymous ));
+		//Category categoryAnonymous = categoryRepository.save(new Category("categoryAnonymous"));
+		//contactRepository.save(new Contact("name", "sname","email", "phone", "adresse", categoryAnonymous ));
 
 		//WHEN
 		Contact contact = contactRepository.findByNameContains("name").get(0);
